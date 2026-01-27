@@ -1,14 +1,56 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-10 px-4">
 
-<PageTitle>Home</PageTitle>
+    <MudGrid Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="gap-8">
 
-<div class="p-6 bg-white rounded-xl shadow">
-    <h1 class="text-2xl font-bold text-gray-800">
-        Home
-    </h1>
-</div>
+        <MudItem xs="12" md="6" class="space-y-6">
+            <MudText Typo="Typo.h3" Color="Color.Primary" Class="font-semibold text-blue-700">
+                Bienvenido a Portal Empresas
+            </MudText>
+            <MudText Typo="Typo.subtitle1" Class="text-gray-700">
+                Tu sistema integral para la gestión y control de almacenaje y logística.
+                Administra entradas, salidas, inventarios y bodegas con facilidad y eficiencia.
+            </MudText>
 
-Welcome to your new app.
-<div class="bg-green-500 text-white p-4 rounded-lg">
-    Tailwind OK
-</div>
+            <MudStack Spacing="2" Direction="Row">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="bg-blue-600 hover:bg-blue-700" OnClick="@(() => NavigationManager.NavigateTo("/bodegas"))">
+                    Gestión de Bodegas
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="border-blue-600 text-blue-600 hover:bg-blue-100" OnClick="@(() => NavigationManager.NavigateTo("/entradas"))">
+                    Registrar Entrada
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Class="border-blue-600 text-blue-600 hover:bg-blue-100" OnClick="@(() => NavigationManager.NavigateTo("/salidas"))">
+                    Registrar Salida
+                </MudButton>
+            </MudStack>
+        </MudItem>
+
+     @*    <MudItem xs="12" md="5">
+            <MudImage Src="images/warehouse_illustration.svg" Alt="Almacenaje y logística" Class="rounded-lg shadow-lg" />
+        </MudItem>
+ *@
+    </MudGrid>
+
+    <MudDivider Class="my-12" />
+
+    <MudGrid Spacing="4">
+
+        @foreach (var item in new[] {
+                new { Icon=Icons.Material.Filled.Inventory, Title="Control de Inventario", Description="Monitorea la cantidad de productos almacenados en tiempo real."},
+                new { Icon=Icons.Material.Filled.ExitToApp, Title="Salidas", Description="Gestiona y controla las salidas de productos con registro detallado."},
+                new { Icon=Icons.Material.Filled.Input, Title="Entradas", Description="Registra las entradas de productos a las bodegas de forma ágil."},
+                new { Icon=Icons.Material.Filled.Assessment, Title="Reportes", Description="Genera reportes detallados para un mejor análisis logístico y de almacenaje."}
+                })
+        {
+            <MudItem xs="12" md="3">
+                <MudPaper Class="pa-6 rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+                    <MudIcon Icon="@item.Icon" Size="Size.Large" Color="Color.Primary" Class="text-blue-600" />
+                    <MudText Typo="Typo.h6" Class="mt-3 mb-1 font-semibold">@item.Title</MudText>
+                    <MudText Class="text-gray-600">@item.Description</MudText>
+                </MudPaper>
+            </MudItem>
+        }
+    </MudGrid>
+
+</MudContainer>

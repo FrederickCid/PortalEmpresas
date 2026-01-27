@@ -14,9 +14,12 @@ builder.Services.AddMudServices();
 
 // 🔹 Authentication & Authorization
 builder.Services.AddAuthorizationCore();
+// 1️⃣ Registrar el concreto
 builder.Services.AddScoped<AuthStateProvider>();
-builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 
+// 2️⃣ Registrar el contrato apuntando al concreto
+builder.Services.AddScoped<AuthenticationStateProvider>(
+    sp => sp.GetRequiredService<AuthStateProvider>());
 // 🔹 Build & Configure Pipeline
 var app = builder.Build();
 
@@ -24,11 +27,11 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
+
 
 app.UseAntiforgery();
 
