@@ -1,42 +1,58 @@
 using MudBlazor.Services;
 using PortalEmpresas.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using PortalEmpresas.Components.Auth;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 Blazor Components
+// 🔹 Razor Components (Server)
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// 🔹 MudBlazor UI Library
+// 🔹 MudBlazor
 builder.Services.AddMudServices();
 
-// 🔹 Authentication & Authorization
-builder.Services.AddAuthorizationCore();
-// 1️⃣ Registrar el concreto
-builder.Services.AddScoped<AuthStateProvider>();
+// 🔹 HttpContext
+builder.Services.AddHttpContextAccessor();
 
-// 2️⃣ Registrar el contrato apuntando al concreto
+// 🔹 Authentication (OBLIGATORIO)
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login";
+        options.AccessDeniedPath = "/not-authorized";
+    });
+
+// 🔹 Authorization (NO Core)
+builder.Services.AddAuthorization();
+
+// 🔹 AuthStateProvider
+builder.Services.AddScoped<AuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(
     sp => sp.GetRequiredService<AuthStateProvider>());
-// 🔹 Build & Configure Pipeline
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// 🔹 Pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-app.UseHttpsRedirection();
 
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+// 🔥 CLAVE
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAntiforgery();
 
-app.MapStaticAssets();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+   .AddInteractiveServerRenderMode();
 
 app.Run();

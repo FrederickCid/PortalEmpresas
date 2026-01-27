@@ -8,13 +8,21 @@ namespace PortalEmpresas.Components.Auth
         private ClaimsPrincipal _anonymous =
             new ClaimsPrincipal(new ClaimsIdentity());
 
-        private ClaimsPrincipal? _currentUser;  // ← AGREGA el ? aquí
+        private ClaimsPrincipal? _currentUser;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AuthStateProvider(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            return Task.FromResult(
-                new AuthenticationState(_currentUser ?? _anonymous)
-            );
+            var user = _httpContextAccessor.HttpContext?.User
+                       ?? new ClaimsPrincipal(new ClaimsIdentity());
+
+            return Task.FromResult(new AuthenticationState(user));
         }
 
         public void SignIn(string rutEmpresa, string email)
