@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MudBlazor" Version="8.15.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" />
+	</ItemGroup>
+	<Target Name="BuildTailwind" BeforeTargets="Build">
+		<Message Text="🔧 Building Tailwind CSS..." Importance="high" />
+		<Exec Command="npm run tw:build" />
+	</Target>
+
+</Project>
