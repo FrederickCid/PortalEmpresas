@@ -1,16 +1,71 @@
-﻿@inherits LayoutComponentBase
+﻿@using PortalEmpresas.Components.Auth
+@inherits LayoutComponentBase
+@inject AuthStateProvider AuthState
+@inject NavigationManager Nav
+@inject IJSRuntime JS
 
-<MudThemeProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
-<MudPopoverProvider />
+<PageTitle>Portal Empresas</PageTitle>
 
 <MudLayout>
-    <MudAppBar Color="Color.Primary">
-        <MudText Typo="Typo.h6">Portal Empresas</MudText>
+    <!-- 🔹 SIDEBAR -->
+    <MudNavMenu>
+        <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home" Match="NavLinkMatch.All">
+            Dashboard
+        </MudNavLink>
+        <MudNavLink Href="/facturacion" Icon="@Icons.Material.Filled.Receipt">
+            Facturación
+        </MudNavLink>
+        <MudNavLink Href="/inventario" Icon="@Icons.Material.Filled.Inventory2">
+            Inventario
+        </MudNavLink>
+        <MudNavLink Href="/clientes" Icon="@Icons.Material.Filled.PeopleAlt">
+            Clientes
+        </MudNavLink>
+        <MudNavLink Href="/reportes" Icon="@Icons.Material.Filled.BarChart">
+            Reportes
+        </MudNavLink>
+        <MudDivider Class="my-2" />
+        <MudNavLink Href="/admin" Icon="@Icons.Material.Filled.Settings">
+            Configuración
+        </MudNavLink>
+    </MudNavMenu>
+
+    <!-- 🔹 APPBAR SUPERIOR -->
+    <MudAppBar Elevation="1" Color="Color.Primary">
+        <MudText Typo="Typo.h6" Class="mr-auto">
+            <i class="fas fa-briefcase mr-2"></i>
+            Portal Empresas
+        </MudText>
+        
+        <AuthorizeView>
+            <Authorized>
+                <MudChip T="string" Icon="@Icons.Material.Filled.Person" Color="Color.Info" Variant="Variant.Text">
+                    @(context.User.FindFirst("RutEmpresa")?.Value ?? "Usuario")
+                </MudChip>
+                <MudButton Variant="Variant.Text" Color="Color.Inherit" StartIcon="@Icons.Material.Filled.Logout" @onclick="HandleLogout">
+                    Salir
+                </MudButton>
+            </Authorized>
+            <NotAuthorized>
+                <MudButton Variant="Variant.Text" Color="Color.Inherit" Href="/login">
+                    Iniciar Sesión
+                </MudButton>
+            </NotAuthorized>
+        </AuthorizeView>
     </MudAppBar>
 
+    <!-- 🔹 MAIN CONTENT -->
     <MudMainContent>
-        @Body
+        <MudContainer MaxWidth="MaxWidth.Large" Class="py-8">
+            @Body
+        </MudContainer>
     </MudMainContent>
 </MudLayout>
+
+@code {
+    private async Task HandleLogout()
+    {
+        AuthState.SignOut();
+        Nav.NavigateTo("/login", forceLoad: true);
+    }
+}

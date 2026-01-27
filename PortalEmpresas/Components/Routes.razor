@@ -1,21 +1,37 @@
-﻿@using PortalEmpresas.Components.Auth
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using MudBlazor
 
 <CascadingAuthenticationState>
-
-    <Router AppAssembly="typeof(Program).Assembly">
+    <Router AppAssembly="@typeof(Routes).Assembly" AdditionalAssemblies="new[] { typeof(MudComponentBase).Assembly }">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
                 <NotAuthorized>
                     <RedirectToLogin />
                 </NotAuthorized>
             </AuthorizeRouteView>
         </Found>
-
         <NotFound>
-            <LayoutView Layout="typeof(MainLayout)">
-                <p>Página no encontrada</p>
-            </LayoutView>
+            <PageTitle>Not found</PageTitle>
+            <div class="min-h-screen flex items-center justify-center bg-gray-50">
+                <div class="text-center">
+                    <h1 class="text-4xl font-bold text-red-600 mb-4">404</h1>
+                    <p class="text-xl text-gray-600 mb-8">Página no encontrada</p>
+                    <a href="/" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Volver al Dashboard
+                    </a>
+                </div>
+            </div>
         </NotFound>
     </Router>
-
 </CascadingAuthenticationState>
+
+@code {
+    protected override void OnInitialized()
+    {
+        CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("es-CL");
+        CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("es-CL");
+    }
+}

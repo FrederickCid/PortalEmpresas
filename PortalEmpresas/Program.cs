@@ -3,26 +3,25 @@ using PortalEmpresas.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using PortalEmpresas.Components.Auth;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 Blazor
+// 🔹 Blazor Components
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// 🔹 MudBlazor
+// 🔹 MudBlazor UI Library
 builder.Services.AddMudServices();
-//authProvider
+
+// 🔹 Authentication & Authorization
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 
+// 🔹 Build & Configure Pipeline
 var app = builder.Build();
 
-// 🔹 Pipeline
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseHsts();
 }
 

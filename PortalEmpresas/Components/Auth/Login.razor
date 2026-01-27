@@ -1,5 +1,196 @@
 ﻿@page "/login"
 @attribute [AllowAnonymous]
+@rendermode InteractiveServer
+@inject AuthStateProvider AuthState
+@inject NavigationManager Nav
+@using System.ComponentModel.DataAnnotations;
 
-<h3>Login</h3>
-<p>Login placeholder</p>
+
+<PageTitle>Portal Empresas - Login</PageTitle>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 flex items-center justify-center px-4">
+    <div class="w-full max-w-md">
+        <!-- Card Principal -->
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header Card -->
+            <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-12 text-center">
+                <div class="mb-4">
+                    <svg class="w-16 h-16 mx-auto text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-2">Portal Empresas</h1>
+                <p class="text-blue-100">Sistema de Gestión Empresarial</p>
+            </div>
+
+            <!-- Formulario -->
+            <div class="px-8 py-8">
+                <EditForm Model="@loginModel" OnValidSubmit="HandleLogin" FormName="loginForm">
+                    <DataAnnotationsValidator />
+
+                    <!-- Campo RUT -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">RUT Empresa</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </span>
+                            <InputText @bind-Value="loginModel.RutEmpresa"
+                                       class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       placeholder="76.123.456-7" />
+                        </div>
+                        <ValidationMessage For="@(() => loginModel.RutEmpresa)" class="text-red-500 text-sm mt-1" />
+                    </div>
+
+                    <!-- Campo Email -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Correo Electrónico</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </span>
+                            <InputText @bind-Value="loginModel.Email"
+                                       type="email"
+                                       class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       placeholder="usuario@empresa.cl" />
+                        </div>
+                        <ValidationMessage For="@(() => loginModel.Email)" class="text-red-500 text-sm mt-1" />
+                    </div>
+
+                    <!-- Campo Password -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Contraseña</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                            </span>
+                            <InputText @bind-Value="loginModel.Password"
+                                       type="@(showPassword ? "text" : "password")"
+                                       class="w-full pl-10 pr-12 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       placeholder="••••••••" />
+                            <button type="button"
+                                    class="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                                    @onclick="() => showPassword = !showPassword">
+                                @if (showPassword)
+                                {
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0z"></path>
+                                    </svg>
+                                }
+                                else
+                                {
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                }
+                            </button>
+                        </div>
+                        <ValidationMessage For="@(() => loginModel.Password)" class="text-red-500 text-sm mt-1" />
+                    </div>
+
+                    <!-- Recordarme -->
+                    <div class="mb-6">
+                        <label class="flex items-center">
+                            <InputCheckbox @bind-Value="loginModel.Recordar" class="w-4 h-4 text-blue-600 rounded" />
+                            <span class="ml-2 text-sm text-gray-700">Recordarme en este dispositivo</span>
+                        </label>
+                    </div>
+
+                    <!-- Botón Login -->
+                    <button type="submit"
+                            disabled="@loading"
+                            class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 rounded-lg transition duration-200 @(loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer")">
+                        @if (loading)
+                        {
+                            <span class="inline-block">
+                                <span class="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+                                Iniciando sesión...
+                            </span>
+                        }
+                        else
+                        {
+                            <span>Iniciar Sesión</span>
+                        }
+                    </button>
+                </EditForm>
+            </div>
+
+            <!-- Footer con info demo -->
+            <div class="bg-blue-50 border-t border-blue-200 px-8 py-6">
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <p class="text-sm font-semibold text-yellow-900 mb-2">🔧 Credenciales de Demo:</p>
+                    <ul class="text-xs text-yellow-800 space-y-1">
+                        <li><strong>RUT:</strong> <code class="bg-white px-2 py-1 rounded">76.123.456-7</code></li>
+                        <li><strong>Email:</strong> <code class="bg-white px-2 py-1 rounded">admin@empresa.cl</code></li>
+                        <li><strong>Password:</strong> <code class="bg-white px-2 py-1 rounded">123456</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer página -->
+        <div class="text-center mt-8 text-blue-100">
+            <p class="text-sm">© 2026 Portal Empresas. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</div>
+
+@code {   
+
+    private LoginModel loginModel = new();
+    private bool loading = false;
+    private bool showPassword = false;
+
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "RUT empresa es requerido")]
+        public string RutEmpresa { get; set; } = "";
+
+        [Required(ErrorMessage = "Email es requerido")]
+        [EmailAddress(ErrorMessage = "Email debe ser válido")]
+        public string Email { get; set; } = "";
+
+        [Required(ErrorMessage = "Contraseña es requerida")]
+        [StringLength(50, MinimumLength = 6, ErrorMessage = "Contraseña debe tener entre 6 y 50 caracteres")]
+        public string Password { get; set; } = "";
+
+        public bool Recordar { get; set; }
+    }
+
+    private async Task HandleLogin()
+    {
+        loading = true;
+        StateHasChanged();
+
+        // Simular llamada a API
+        await Task.Delay(1500);
+
+        // Validación MOCK: contraseña debe ser "123456"
+        if (loginModel.Password != "123456")
+        {
+            loading = false;
+            StateHasChanged();
+            return;
+        }
+
+        // Login exitoso
+        try
+        {
+            AuthState.SignIn(loginModel.RutEmpresa, loginModel.Email);
+            Nav.NavigateTo("/", forceLoad: false);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error en login: {ex.Message}");
+            loading = false;
+            StateHasChanged();
+        }
+    }
+}
