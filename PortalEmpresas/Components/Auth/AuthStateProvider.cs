@@ -8,7 +8,7 @@ namespace PortalEmpresas.Components.Auth
         private ClaimsPrincipal _anonymous =
             new ClaimsPrincipal(new ClaimsIdentity());
 
-        private ClaimsPrincipal _currentUser;
+        private ClaimsPrincipal? _currentUser;  // ← AGREGA el ? aquí
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
