@@ -14,6 +14,7 @@ builder.Services.AddMudServices();
 
 // 🔹 Authentication & Authorization
 builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
 
 // 🔹 Build & Configure Pipeline
