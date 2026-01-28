@@ -10,6 +10,7 @@ import { scrollBottom, scrollTop, scroll} from "./scroll";
 import { generarPDFCotizacion , obtenerPDFCotizacionFile} from "./jsPdf_Corizacion";
 import { mostrarPdfEnIframe } from "./pdfViewer";
 import { focuselement, setValue, isFocused } from "./utility";
+import { saveAsFile } from "./download";
 
 //prueba getCurrentTime
 export function GetCurrentTime() {
@@ -94,6 +95,9 @@ export function BorrarCookies(cname) {
 }
 export function GenerarPDFCotizacion() {
   return generarPDFCotizacion();
+}
+export function DownloadFile(filename, bytesBase64) {
+    return saveAsFile(filename, bytesBase64);
 }
 export function ObtenerPDFCotizacionFile(cliente, Vendedor , productos ,ResponseCotizacionIdoperacion, busquedaResultIdoperacion, totales ) {
   return obtenerPDFCotizacionFile(cliente, Vendedor , productos ,ResponseCotizacionIdoperacion, busquedaResultIdoperacion, totales );

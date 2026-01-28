@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System.Buffers.Text;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace PortalAG_V2.Services
@@ -93,6 +95,10 @@ namespace PortalAG_V2.Services
         public static async Task<object> SetValue(this IJSRuntime js, string ElementId, string value)
         {
             return await js.InvokeAsync<object>("MyLib.SetValue", ElementId, value);
+        }
+        public static async Task<object> DownloadFile(this IJSRuntime js,string filename, string bytesBase64)
+        {
+            return await js.InvokeAsync<object>("MyLib.DownloadFile", filename, bytesBase64);
         }
         #endregion
 
