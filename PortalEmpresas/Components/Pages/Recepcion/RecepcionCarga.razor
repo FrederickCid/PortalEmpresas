@@ -1,6 +1,109 @@
-﻿@page "/recepcion/carga"
-<h3>RecepcionCarga</h3>
+﻿@page "/recepcion/carga-masiva"
+@using PortalEmpresas.Shared.Models.Recepcion
+@inject IDialogService DialogService
 
-@code {
+<PageTitle>Portal Empresas - Carga Masiva Recepción</PageTitle>
 
-}
+<MudPaper Class="pa-4">
+
+    <MudText Typo="Typo.h6" Class="mb-4">
+        Carga Masiva de Entradas (Recepción)
+    </MudText>
+
+    <!-- Carga de archivo -->
+    <MudCard Class="mb-6">
+        <MudCardHeader>
+            <MudText Typo="Typo.subtitle1" Style="font-weight:bold;">
+                Carga de Archivo Excel
+            </MudText>
+        </MudCardHeader>
+
+        <MudCardContent Style="display:flex; flex-direction:row; gap:10px; align-items:center">
+
+            <InputFile id="fileInput"
+                       OnChange="UploadFiles"
+                       hidden
+                       accept=".xlsx" />
+
+            <MudFab HtmlTag="label"
+                    StartIcon="@Icons.Material.Filled.CloudUpload"
+                    Size="Size.Small"
+                    Color="Color.Primary"
+                    Label="Seleccionar Archivo"
+                    for="fileInput">
+                Seleccionar archivo
+            </MudFab>
+
+            <MudText Class="ml-2" Style="max-width:300px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis">
+                @NombreArchivo
+            </MudText>
+
+            @if (ArchivoCargado)
+            {
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Color="Color.Error"
+                               Size="Size.Small"
+                               OnClick="EliminarArchivo" />
+            }
+
+            <MudSpacer />
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Success"
+                       Size="Size.Small"
+                       OnClick="ProcesarArchivo">
+                Procesar archivo
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Info"
+                       Size="Size.Small"
+                       OnClick="DescargarEjemplo">
+                Descargar Excel Ejemplo
+            </MudButton>
+
+        </MudCardContent>
+    </MudCard>
+
+    <!-- Grilla -->
+    <MudDataGrid T="RecepcionEntradaExcelValidada"
+                 Items="Listado"
+                 Dense="true"
+                 Bordered="true"
+                 Hover="true"
+                 Breakpoint="Breakpoint.Sm">
+
+        <Columns>
+            <PropertyColumn Property="x => x.Linea" Title="Línea" />
+            <PropertyColumn Property="x => x.CodigoArticulo" Title="Código Artículo" />
+            <PropertyColumn Property="x => x.NombreArticulo" Title="Nombre Artículo" />
+            <PropertyColumn Property="x => x.Cantidad" Title="Cantidad" />
+            <PropertyColumn Property="x => x.Bultos" Title="Bultos" />
+            <PropertyColumn Property="x => x.Referencia" Title="Referencia" />
+            <PropertyColumn Property="x => x.Error" Title="Error" />
+        </Columns>
+
+        <PagerContent>
+            <MudDataGridPager T="RecepcionEntradaExcelValidada"
+                              PageSizeOptions="new int[] { 10, 25, 50 }" />
+        </PagerContent>
+
+    </MudDataGrid>
+
+    <!-- Acciones -->
+    <MudPaper Class="mt-4 pa-4" Style="display:flex; justify-content:end; gap:10px">
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Info"
+                   Disabled="@DeshabilitarEnviar"
+                   OnClick="Enviar">
+            Enviar
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Error"
+                   OnClick="Limpiar">
+            Limpiar
+        </MudButton>
+    </MudPaper>
+
+</MudPaper>

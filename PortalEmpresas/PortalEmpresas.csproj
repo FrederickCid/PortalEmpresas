@@ -8,8 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.JSInterop" Version="10.0.2" />
 		<PackageReference Include="MudBlazor" Version="8.15.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\PortalEmpresas.Shared\PortalEmpresas.Shared.csproj" />
 	</ItemGroup>
 	<Target Name="BuildTailwind" BeforeTargets="Build">
 		<Message Text="🔧 Building Tailwind CSS..." Importance="high" />
