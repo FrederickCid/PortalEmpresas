@@ -1,13 +1,15 @@
-const writeCookie = (name, value, seconds) => {
-  let expires;
-  if (seconds) {
-    var date = new Date();
-    date.setTime(date.getTime() + seconds); // Convert hours to milliseconds
-    expires = "; expires=" + date.toGMTString();
-  } else {
-    expires = "";
-  }
-  document.cookie = name + "=" + value + expires + "; path=/";
+const writeCookie = (name, value, days) => {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        expires = "; expires=" + date.toUTCString();
+    }
+
+    document.cookie =
+        `${name}=${encodeURIComponent(value)}${expires}; path=/; SameSite=Lax`;
+
+    return true;
 };
 
 const readCookie = (cname) => {

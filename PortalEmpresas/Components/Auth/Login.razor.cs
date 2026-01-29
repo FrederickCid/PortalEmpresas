@@ -54,7 +54,7 @@ namespace PortalEmpresas.Components.Auth
             AuthState.SetUserFromToken(response.Data.token);
 
             // 3️⃣ Navegar
-            Nav.NavigateTo("/", forceLoad: true);
+            Nav.NavigateTo("/");
         }
 
     }
