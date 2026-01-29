@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 using PortalEmpresas.Components;
 using PortalEmpresas.Components.Auth;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using PortalEmpresas.Shared.Services;
+using PortalEmpresas.Shared.Services.Login;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +33,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<AuthStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(
     sp => sp.GetRequiredService<AuthStateProvider>());
+// 🔹 LoginData
+builder.Services.AddScoped<MainServices>();
+builder.Services.AddScoped<LoginData>();
 
 var app = builder.Build();
 

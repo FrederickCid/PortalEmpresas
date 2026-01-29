@@ -1,46 +1,46 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace PortalEmpresas.Components.Auth
 {
     public class AuthStateProvider : AuthenticationStateProvider
     {
-        private ClaimsPrincipal _anonymous =
+        private readonly ClaimsPrincipal _anonymous =
             new ClaimsPrincipal(new ClaimsIdentity());
 
-        private ClaimsPrincipal? _currentUser;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private ClaimsPrincipal _currentUser;
 
-        public AuthStateProvider(IHttpContextAccessor httpContextAccessor)
+        public AuthStateProvider()
         {
-            _httpContextAccessor = httpContextAccessor;
+            _currentUser = _anonymous;
         }
-
 
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var user = _httpContextAccessor.HttpContext?.User
-                       ?? new ClaimsPrincipal(new ClaimsIdentity());
-
-            return Task.FromResult(new AuthenticationState(user));
+            return Task.FromResult(new AuthenticationState(_currentUser));
         }
 
-        public void SignIn(string rutEmpresa, string email)
+        // 🔑 LOGIN: crear usuario desde JWT
+        public void SetUserFromToken(string jwtToken)
         {
-            var identity = new ClaimsIdentity(new[]
-            {
-                new Claim(ClaimTypes.Name, email),
-                new Claim("RutEmpresa", rutEmpresa)
-            }, "FakeAuth");
+            var handler = new JwtSecurityTokenHandler();
+            var token = handler.ReadJwtToken(jwtToken);
+
+            var identity = new ClaimsIdentity(
+                token.Claims,
+                authenticationType: "jwt"
+            );
 
             _currentUser = new ClaimsPrincipal(identity);
 
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        public void SignOut()
+        // 🔓 LOGOUT
+        public void ClearUser()
         {
-            _currentUser = null;
+            _currentUser = _anonymous;
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
     }

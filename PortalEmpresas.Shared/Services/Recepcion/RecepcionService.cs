@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PortalEmpresas.Shared.Services.Recepcion
 {
-    public class RecepcionService : IRecepcionService
+    public class RecepcionService 
     {
 
     }

@@ -8,7 +8,7 @@ namespace PortalEmpresas.Shared.Services
     {
         #region Instancias de Clientes
 
-        public ClientFactory test { get; set; } = new ClientFactory("https://apicda.andesindustrial.cl/");
+        public ClientFactory test { get; set; } = new ClientFactory("https://localhost:44316/");
    
 
         #endregion
