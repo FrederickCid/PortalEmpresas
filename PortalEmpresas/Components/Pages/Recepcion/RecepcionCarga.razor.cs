@@ -35,23 +35,19 @@ namespace PortalEmpresas.Components.Pages.Recepcion
             var worksheet = workbook.Worksheets.Add("Entradas");
             var i = 1;
             // Encabezados
-            worksheet.Cell(i, 1).Value = "CodigoArticulo";
-            worksheet.Cell(i, 2).Value = "NombreArticulo";
-            worksheet.Cell(i, 3).Value = "Cantidad";
+            worksheet.Cell(i, 1).Value = "Linea";
+            worksheet.Cell(i, 2).Value = "Codigo Artículo";
+            worksheet.Cell(i, 3).Value = "Nombre Artículo";
             worksheet.Cell(i, 4).Value = "Cantidad";
-            worksheet.Cell(i, 5).Value = "Cantidad";
-            worksheet.Cell(i, 3).Value = "Cantidad";
+            worksheet.Cell(i, 5).Value = "Bultos";
+            worksheet.Cell(i, 6).Value = "Referencia";
 
             // Estilo encabezados
-            var headerRange = worksheet.Range("A1:C1");
+            var headerRange = worksheet.Range("A1:F1");
             headerRange.Style.Font.Bold = true;
             headerRange.Style.Fill.BackgroundColor = XLColor.LightGray;
             headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
-            // Ejemplo de fila
-            worksheet.Cell(2, 1).Value = "ART-001";
-            worksheet.Cell(2, 2).Value = "Articulo de prueba";
-            worksheet.Cell(2, 3).Value = 10;
 
             worksheet.Columns().AdjustToContents();
 
